@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ukasan...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        body {
+            background: radial-gradient(circle at top, #111 0%, #000 60%);
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        .counter {
+            font-size: clamp(32px, 5vw, 64px);
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            margin: 16px 0;
+            transition: font-size 0.2s ease;
+        }
+        
+        .counter.detail {
+            font-size: clamp(26px, 4vw, 52px);
+        }
+        
+        .label {
+            font-size: 14px;
+            opacity: 0.6;
+            letter-spacing: 0.2em;
+        }
+        
+        .sns {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 28px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .sns-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.55;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        
+        .sns-btn svg {
+            width: 100%;
+            height: 100%;
+            fill: #fff;
+        }
+        
+        .sns-btn:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="label">Lonely 2025.09.23 ~</div>
+        <div class="counter" id="counter1">0</div>
+
+        <div style="height: 32px"></div>
+
+        <div class="label">RUKI 2025.10.16 ~</div>
+        <div class="counter" id="counter2">0</div>
+        <div class="sns">
+            <a href="https://www.instagram.com/aru.san_" target="_blank" aria-label="Instagram" class="sns-btn">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm10 2c1.65 0 3 1.35 3 3v10c0 1.65-1.35 3-3 3H7c-1.65 0-3-1.35-3-3V7c0-1.65 1.35-3 3-3h10zm-5 3.2a4.8 4.8 0 1 0 0 9.6 4.8 4.8 0 0 0 0-9.6zm0 2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6zM17.5 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+        </svg>
+            </a>
+            <a href="https://x.com/Lvaru_" target="_blank" aria-label="X" class="sns-btn">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18.9 2H22l-7.2 8.23L23 22h-6.6l-5.17-6.64L5.8 22H2.7l7.7-8.8L1 2h6.7l4.67 6.02L18.9 2z"/>
+        </svg>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const start1 = new Date("2025-09-23T00:00:00+09:00");
+        const start2 = new Date("2025-10-16T00:00:00+09:00");
+
+        let mode1 = 'seconds';
+        let mode2 = 'seconds';
+
+        function diffToParts(diffSeconds) {
+            let seconds = diffSeconds;
+
+            const years = Math.floor(seconds / (365 * 24 * 60 * 60));
+            seconds %= 365 * 24 * 60 * 60;
+
+            const months = Math.floor(seconds / (30 * 24 * 60 * 60));
+            seconds %= 30 * 24 * 60 * 60;
+
+            const days = Math.floor(seconds / (24 * 60 * 60));
+            seconds %= 24 * 60 * 60;
+
+            const hours = Math.floor(seconds / (60 * 60));
+            seconds %= 60 * 60;
+
+            const minutes = Math.floor(seconds / 60);
+            seconds %= 60;
+
+            const parts = [];
+            if (years > 0) parts.push(`${years}年`);
+            parts.push(`${months}ヶ月`, `${days}日`, `${hours}時間`, `${minutes}分`, `${seconds}秒`);
+            return parts.join('');
+        }
+
+        function update() {
+            const now = new Date();
+            const diff1 = Math.floor((now - start1) / 1000);
+            const diff2 = Math.floor((now - start2) / 1000);
+
+            const el1 = document.getElementById("counter1");
+            const el2 = document.getElementById("counter2");
+
+            if (mode1 === 'seconds') {
+                el1.textContent = diff1.toLocaleString();
+                el1.classList.remove('detail');
+            } else {
+                el1.textContent = diffToParts(diff1);
+                el1.classList.add('detail');
+            }
+
+            if (mode2 === 'seconds') {
+                el2.textContent = diff2.toLocaleString();
+                el2.classList.remove('detail');
+            } else {
+                el2.textContent = diffToParts(diff2);
+                el2.classList.add('detail');
+            }
+        }
+
+        document.getElementById("counter1").addEventListener('click', () => {
+            mode1 = mode1 === 'seconds' ? 'detail' : 'seconds';
+            update();
+        });
+
+        document.getElementById("counter2").addEventListener('click', () => {
+            mode2 = mode2 === 'seconds' ? 'detail' : 'seconds';
+            update();
+        });
+
+        update();
+        setInterval(update, 1000);
+    </script>
+</body>
+
+</html>
